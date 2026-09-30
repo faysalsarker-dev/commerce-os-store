@@ -27,6 +27,7 @@ export const metadata: Metadata = {
 
 
 import type { NavItem } from "@/types/nav-item.type";
+import { Footer } from "@/components/shared/footer";
 
 export const navItems: NavItem[] = [
   { label: "Home", href: "#top" },
@@ -46,9 +47,16 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={cn("h-full", "antialiased", geistSans.variable, geistMono.variable, "font-sans", inter.variable)}
     >
-      <Header logoText="Forma" navItems={navItems} cartCount={2} />
+   
+      <body className="min-h-full flex flex-col">
+        
+        
+           <Header logoText="Forma" navItems={navItems} cartCount={2} />
       <MobileAppbar logoText="Forma" navItems={navItems} cartCount={2} />
-      <body className="min-h-full flex flex-col">{children}</body>
+        {children}
+        
+        <Footer/></body>
+      
     </html>
   );
 }
