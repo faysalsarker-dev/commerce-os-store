@@ -1,23 +1,53 @@
-export type NavItem = { label: string; href: string };
-
 import type { AnchorHTMLAttributes, ImgHTMLAttributes } from "react";
-// import type { Announcement } from "./announcement.type";
-// import type { Category } from "./category.type";
-// import type { HeroSlide } from "./hero-slide.type";
-// import type { Product } from "./product.type";
-// import type { PromoBanner } from "./promo-banner.type";
-// import type { PromoPopup } from "./promo-popup.type";
+
+export type NavItem = { label: string; href: string };
 
 export type AppLinkProps = AnchorHTMLAttributes<HTMLAnchorElement>;
 export type AppImageProps = ImgHTMLAttributes<HTMLImageElement>;
 export type HeaderProps = { logoText: string; navItems: NavItem[]; cartCount: number };
 export type MobileAppbarProps = HeaderProps;
 export type FooterProps = { logoText: string };
-// export type ProductCardProps = { product: Product };
-// export type PromoPopupProps = { popup: PromoPopup };
-// export type MarqueeBarProps = { items: Announcement[] };
-// export type HeroCarouselProps = { slides: HeroSlide[] };
-// export type CategoriesSectionProps = { title: string; categories: Category[] };
-// export type ProductTab = { label: string; products: Product[] };
-// export type ProductSectionProps = { title: string; viewAllHref: string; products: Product[]; tabs?: ProductTab[] };
-// export type PromoBannerProps = { banner: PromoBanner };
+
+export type ProductCardItem = {
+  id: string | number;
+  name: string;
+  image: string;
+  price: number;
+  slug?: string;
+  category?: string;
+  label?: string;
+  originalPrice?: number;
+  rating?: number;
+  reviewCount?: number;
+};
+
+export type ProductTab = { label: string; products: ProductCardItem[] };
+export type ProductSectionProps = {
+  title: string;
+  viewAllHref: string;
+  products: ProductCardItem[];
+  tabs?: ProductTab[];
+};
+
+export type PromoBannerItem = {
+  image: string;
+  title: string;
+  subtitle?: string;
+  couponCode?: string;
+  ctaLabel: string;
+  ctaLink: string;
+};
+
+export type PromoBannerProps = { banner: PromoBannerItem };
+
+export type PromoPopupItem = {
+  isActive: boolean;
+  title: string;
+  description: string;
+  couponCode?: string;
+  ctaLabel: string;
+  ctaLink: string;
+  image?: string;
+};
+
+export type PromoPopupProps = { popup: PromoPopupItem };
