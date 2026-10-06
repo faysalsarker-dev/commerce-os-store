@@ -6,18 +6,23 @@ import { useCallback, useEffect, useRef, useState } from "react";
 const slides = [
   {
     id: "1",
-    image: "https://images.unsplash.com/photo-1649433911119-7cf48b3e8f50?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    image: "https://i.pinimg.com/1200x/1a/35/85/1a3585a130701e041667789d7713d427.jpg",
     alt: "Hero 1",
   },
   {
     id: "2",
-    image: "https://images.unsplash.com/photo-1562263689-1001cf97d149?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    image: "https://i.pinimg.com/1200x/20/3b/be/203bbee4c17863b5c55bab3db609d9ba.jpg",
     alt: "Hero 2",
   },
   {
     id: "3",
-    image: "https://images.unsplash.com/photo-1550344071-13ecada2a91d?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fHx8fA%3D%3D",
+    image: "https://i.pinimg.com/1200x/c9/4b/80/c94b80778cc44b28a45fe4aea8415e52.jpg",
     alt: "Hero 3",
+  },
+  {
+    id: "4",
+    image: "https://i.pinimg.com/1200x/15/b4/e7/15b4e791cdb5dba6efff9573f2af9006.jpg",
+    alt: "Hero 4",
   },
 ];
 

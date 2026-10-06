@@ -1,70 +1,164 @@
-import type { BreadcrumbItemData, ProductDetail } from "@/types/product-detail.type";
-
-const image = (colorId: string, view: number) => `/products/${colorId}-${view}.svg`;
-
-const buildImages = (colorId: string) => [1, 2, 3, 4].map((view) => image(colorId, view));
-
-export const productDetail: ProductDetail = {
-  id: "pd-001",
-  slug: "patchwork-denim-puffer-jacket",
-  name: "Patchwork Denim Puffer Jacket",
-  category: { id: "cat-jackets", name: "Jackets" },
-  sellingPrice: 4500,
-  description:
-    "A quilted puffer cut from patchworked panels of rigid cotton denim, each piece washed to a slightly different tone so no two jackets look exactly alike. A lightweight recycled fill keeps it warm without the bulk.\n\nThe silhouette is boxy and slightly cropped, with a stand collar, two-way metal zip, deep hand pockets, and an interior media pocket. Ribbed cuffs keep out the wind on colder mornings.\n\nDesigned to be layered over a hoodie or a simple tee, it softens and fades beautifully with wear.",
-  colors: [
-    {
-      id: "light-blue",
-      colorName: "Light Blue",
-      colorHex: "#A9C1D9",
-      images: buildImages("light-blue"),
-      variants: [
-        { id: "v-l-s", size: "S", stockQty: 12 },
-        { id: "v-l-m", size: "M", stockQty: 3 },
-        { id: "v-l-l", size: "L", stockQty: 0 },
-        { id: "v-l-xl", size: "XL", stockQty: 8, sellingPriceOverride: 4800 },
-        { id: "v-l-xxl", size: "XXL", stockQty: 2, sellingPriceOverride: 4950 },
-      ],
-    },
-    {
-      id: "indigo",
-      colorName: "Indigo",
-      colorHex: "#2E3A63",
-      images: buildImages("indigo"),
-      variants: [
-        { id: "v-i-s", size: "S", stockQty: 0 },
-        { id: "v-i-m", size: "M", stockQty: 15 },
-        { id: "v-i-l", size: "L", stockQty: 9 },
-        { id: "v-i-xl", size: "XL", stockQty: 1 },
-        { id: "v-i-xxl", size: "XXL", stockQty: 4, sellingPriceOverride: 4950 },
-      ],
-    },
-    {
-      id: "charcoal",
-      colorName: "Charcoal",
-      colorHex: "#3A3A3C",
-      images: buildImages("charcoal"),
-      variants: [
-        { id: "v-c-s", size: "S", stockQty: 6 },
-        { id: "v-c-m", size: "M", stockQty: 10 },
-        { id: "v-c-l", size: "L", stockQty: 4 },
-        { id: "v-c-xl", size: "XL", stockQty: 0 },
-        { id: "v-c-xxl", size: "XXL", stockQty: 0 },
-      ],
-    },
-  ],
+export type ProductColor = {
+  name: string;
+  hex: string;
+  images: string[];
 };
 
-export const products: ProductDetail[] = [productDetail];
+export type Product = {
+  id: string;
+  slug: string;
+  name: string;
+  category: string;
+  description: string;
+  price: number;
+  originalPrice: number;
+  sellingPrice: number;
+  badge: string;
+  rating: number;
+  reviewCount: number;
+  sizes: string[];
+  colors: ProductColor[];
+};
 
-export function getProductBySlug(slug: string): ProductDetail | undefined {
+const image = (photoId: string, width = 1200, height = 1500) =>
+  `https://images.unsplash.com/photo-${photoId}?auto=format&fit=crop&w=${width}&h=${height}&q=80`;
+
+export const products: Product[] = [
+  {
+    id: "hoodie-essential",
+    slug: "essential-oversized-hoodie",
+    name: "Essential Oversized Hoodie",
+    category: "Essentials",
+    description:
+      "Premium heavyweight cotton hoodie with an oversized fit for ultimate comfort and modern style.",
+    price: 59.99,
+    originalPrice: 89.99,
+    sellingPrice: 59.99,
+    badge: "New Arrival",
+    rating: 4.8,
+    reviewCount: 128,
+    sizes: ["S", "M", "L", "XL", "XXL"],
+    colors: [
+      {
+        name: "Charcoal Gray",
+        hex: "#4b4b4f",
+        images: [
+          image("1521572267360-ee0c2909d518"),
+          image("1503341504253-dff4815485f1"),
+          image("1521572163474-6864f9cf17ab"),
+          image("1542272604-787c3835535d"),
+        ],
+      },
+      {
+        name: "Stone",
+        hex: "#d9d4ce",
+        images: [
+          image("1521572163474-6864f9cf17ab"),
+          image("1556821840-3a63f95609a7"),
+          image("1549298916-b41d501d3772"),
+          image("1584917865442-de89df76afd3"),
+        ],
+      },
+      {
+        name: "Midnight",
+        hex: "#1a1c20",
+        images: [
+          image("1603252109303-2751441dd157"),
+          image("1591047139829-d91aecb6caea"),
+          image("1542272604-787c3835535d"),
+          image("1556821840-3a63f95609a7"),
+        ],
+      },
+    ],
+  },
+  {
+    id: "hoodie-minimal",
+    slug: "minimal-hoodie",
+    name: "Minimal Hoodie",
+    category: "Essentials",
+    description: "A clean, premium essential in a relaxed silhouette built for day-to-day comfort.",
+    price: 54.99,
+    originalPrice: 74.99,
+    sellingPrice: 54.99,
+    badge: "Best Seller",
+    rating: 4.7,
+    reviewCount: 94,
+    sizes: ["S", "M", "L", "XL"],
+    colors: [
+      {
+        name: "Soft Taupe",
+        hex: "#d7d0c5",
+        images: [
+          image("1503341504253-dff4815485f1"),
+          image("1521572267360-ee0c2909d518"),
+          image("1549298916-b41d501d3772"),
+          image("1556821840-3a63f95609a7"),
+        ],
+      },
+    ],
+  },
+  {
+    id: "sweatshirt-classic",
+    slug: "classic-sweatshirt",
+    name: "Classic Sweatshirt",
+    category: "Core",
+    description: "Heavyweight fleece sweatshirt with a structured fit and soft brushed inside.",
+    price: 49.99,
+    originalPrice: 69.99,
+    sellingPrice: 49.99,
+    badge: "Trending",
+    rating: 4.6,
+    reviewCount: 87,
+    sizes: ["S", "M", "L", "XL", "XXL"],
+    colors: [
+      {
+        name: "Dark Coffee",
+        hex: "#2d2b2a",
+        images: [
+          image("1556821840-3a63f95609a7"),
+          image("1591047139829-d91aecb6caea"),
+          image("1603252109303-2751441dd157"),
+          image("1521572163474-6864f9cf17ab"),
+        ],
+      },
+    ],
+  },
+  {
+    id: "hoodie-zip-up",
+    slug: "zip-up-hoodie",
+    name: "Zip Up Hoodie",
+    category: "Layering",
+    description: "A functional zip-up hoodie with premium drape and comfortable everyday warmth.",
+    price: 64.99,
+    originalPrice: 94.99,
+    sellingPrice: 64.99,
+    badge: "Limited Drop",
+    rating: 4.9,
+    reviewCount: 112,
+    sizes: ["S", "M", "L", "XL"],
+    colors: [
+      {
+        name: "Onyx Black",
+        hex: "#121212",
+        images: [
+          image("1542272604-787c3835535d"),
+          image("1584917865442-de89df76afd3"),
+          image("1521572267360-ee0c2909d518"),
+          image("1503341504253-dff4815485f1"),
+        ],
+      },
+    ],
+  },
+];
+
+export function getProductBySlug(slug: string): Product | undefined {
   return products.find((product) => product.slug === slug);
 }
 
-export function buildProductBreadcrumb(product: ProductDetail): BreadcrumbItemData[] {
+export function buildProductBreadcrumb(product: Product) {
   return [
     { label: "Home", href: "/" },
-    { label: product.category?.name ?? "Shop", href: "/#categories" },
-    { label: product.name },
+    { label: "Shop", href: "/products" },
+    { label: product.name, href: `/products/${product.slug}` },
   ];
 }
