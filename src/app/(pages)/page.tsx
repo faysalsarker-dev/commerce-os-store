@@ -2,6 +2,7 @@ import { CategoriesSection } from "@/components/modules/home/categories-section"
 import FeaturedEdit from "@/components/modules/home/featured-edit";
 import { HeroCarousel } from "@/components/modules/home/hero-carousel";
 import { AnnouncementBar } from "@/components/modules/home/marquee-bar";
+import { PromotionalBanner } from "@/components/modules/home/PromotionalBanner";
 import { NewArrivals } from "@/components/sections/home/new-arrivals";
 
 export default function Home() {
@@ -14,6 +15,7 @@ export default function Home() {
  <CategoriesSection />
  <FeaturedEdit/>
  <NewArrivals />
+ <PromotionalBanner/>
 </div>
      
     </>
