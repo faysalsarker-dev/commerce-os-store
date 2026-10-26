@@ -37,7 +37,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full flex flex-col">
         <Header logoText="Forma" navItems={navItems} cartCount={2} />
         <MobileAppbar logoText="Forma" navItems={navItems} cartCount={2} />
-        {children}
+        <main className="bg-background border-2">
+              {children}
+        </main>
+    
         <Footer />
       </body>
     </html>

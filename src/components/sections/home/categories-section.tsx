@@ -37,7 +37,7 @@ export function CategoriesSection({ className }: CategoriesSectionProps) {
         </div>
 
         <Link
-          href="/products"
+          href="/categories"
           className="group inline-flex shrink-0 items-center gap-2 text-sm font-medium transition-colors hover:text-primary"
         >
           View all

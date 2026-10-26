@@ -5,7 +5,7 @@ import { AppLink } from "./app-link";
 
 export function Header({ logoText, navItems, cartCount }: HeaderProps) {
   return (
-    <header className="sticky top-0 z-40 hidden h-18 border-b border-border bg-background/95 backdrop-blur md:block">
+    <header className="sticky top-0 z-40 hidden h-18 border-b border-border bg-card backdrop-blur md:block">
       <div className="mx-auto grid h-full max-w-360 grid-cols-[1fr_auto_1fr] items-center px-8 lg:px-12">
         <AppLink href="#top" className="justify-self-start text-xl font-semibold uppercase tracking-[0.22em]">{logoText}</AppLink>
         <nav aria-label="Primary navigation" className="flex items-center gap-7">

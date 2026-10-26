@@ -24,7 +24,7 @@ export default function CategoriesPage() {
           <ArrowLeft className="size-4" />
           Back to home
         </Link>
-      <div className="relative h-[200px] w-full rounded-lg my-3">
+      <div className="relative h-50 w-full rounded-lg my-3">
         <Image src="/categories-banner.png" alt="Category Banner" fill className="object-cover rounded-lg" />
       </div>
 
@@ -47,7 +47,7 @@ export default function CategoriesPage() {
             />
 
             <p className="mt-3 max-w-lg text-sm leading-6 text-muted-foreground sm:text-base">
-              Browse our collections and discover something you'll love.
+              Browse our collections and discover something you&apos;ll love.
             </p>
           </div>
 

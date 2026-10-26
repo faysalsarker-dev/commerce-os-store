@@ -222,17 +222,7 @@ export function TrendingSection() {
         {filteredProducts.map((product) => (
           <div key={product.id} className="relative group/trending">
             <ProductCard product={product} />
-            {product.salesCount && (
-              <div className="mt-1.5 px-2 flex items-center justify-between text-[0.7rem] text-muted-foreground">
-                <span className="inline-flex items-center gap-1 font-medium text-amber-600 dark:text-amber-400">
-                  <Flame className="size-3 fill-amber-500" />
-                  {product.salesCount}
-                </span>
-                <span className="font-semibold text-foreground/70">
-                  Rank #{product.rank}
-                </span>
-              </div>
-            )}
+         
           </div>
         ))}
       </div>
