@@ -75,13 +75,15 @@ export default function CategoriesPage() {
               className="group min-w-0 rounded-md outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4"
             >
               <div className="relative aspect-square overflow-hidden rounded-xl bg-muted">
-                <Image
-                  src={category.image}
-                  alt={category.title}
-                  fill
-                  sizes="(max-width: 639px) 50vw, (max-width: 1023px) 33vw, (max-width: 1279px) 25vw, 20vw"
-                  className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-                />
+                {category.image ? (
+                  <Image
+                    src={category.image}
+                    alt={category.title}
+                    fill
+                    sizes="(max-width: 639px) 50vw, (max-width: 1023px) 33vw, (max-width: 1279px) 25vw, 20vw"
+                    className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                  />
+                ) : null}
               </div>
 
               <div className="mt-3 flex items-center justify-between gap-2">

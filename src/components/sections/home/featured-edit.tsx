@@ -1,66 +1,11 @@
 
 import { Title } from "@/components/shared/title";
 import { ProductCard } from "../../modules/home/product-card";
-
-type Product = {
-  id: number;
-  name: string;
-  category: string;
-  price: number;
-  image: string;
-  label?: string;
-};
-
-const products: Product[] = [
-
-  {
-    id: 2,
-    name: "Everyday Cotton Tee",
-    category: "Everyday Essentials",
-    price: 890,
-    image:
-      "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=800&q=85",
-  },
-  {
-    id: 3,
-    name: "Essential Hoodie",
-    category: "Comfort Collection",
-    price: 1990,
-    image:
-      "https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=800&q=85",
-  },
-  {
-    id: 4,
-    name: "Classic Everyday Jacket",
-    category: "Modern Classics",
-    price: 2490,
-    image:
-      "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?auto=format&fit=crop&w=1100&q=85",
-  },
-  {
-    id: 5,
-    name: "Relaxed Fit Denim",
-    category: "Daily Wear",
-    price: 1790,
-    image:
-      "https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&w=800&q=85",
-  },
-  {
-    id: 6,
-    name: "Minimal Everyday Shirt",
-    category: "Modern Classics",
-    price: 1290,
-    image:
-      "https://images.unsplash.com/photo-1603252109303-2751441dd157?auto=format&fit=crop&w=800&q=85",
-  },
-];
-
-
-
-
-
+import { products } from "@/data/product.data";
 
 export default function FeaturedEdit() {
+  const featuredProducts = products.filter((product) => product.featured);
+
   return (
     <section id="featured" aria-label="Featured products" className="mt-16 md:mt-24">
       <div className="mb-6 flex items-end justify-between gap-6 md:mb-8">
@@ -80,10 +25,21 @@ export default function FeaturedEdit() {
       </div>
 
       <div className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-5 lg:grid-cols-4">
-        {products.map((product) => (
+        {featuredProducts.map((product) => (
           <ProductCard
             key={product.id}
-            product={product}
+            product={{
+              id: product.id,
+              name: product.name,
+              slug: product.slug,
+              category: product.category,
+              price: product.price,
+              originalPrice: product.originalPrice,
+              image: product.colors[0]?.images[0] ?? "",
+              label: product.badge,
+              rating: product.rating,
+              reviewCount: product.reviewCount,
+            }}
           />
         ))}
       </div>
