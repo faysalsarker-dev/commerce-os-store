@@ -105,15 +105,27 @@ const products: Product[] = [
 export function NewArrivals() {
   return (
     <section id="new-arrivals" aria-label="New arrivals" className="mx-auto w-full max-w-7xl ">
-      <div className="mb-6 md:mb-8">
-        <Title
-          title="New arrivals"
-          as="h2"
-          highlight="arrivals"
-          action="highlight"
-          className="text-2xl font-semibold tracking-tight md:text-3xl lg:text-4xl"
-        />
-      </div>
+    <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+              <div>
+                <p className="mb-2 text-xs font-medium uppercase tracking-[0.25em] text-muted-foreground">
+                  Explore the collection
+                </p>
+    
+                <Title
+                  title="All categories"
+                  as="h1"
+                  highlight="categories"
+                  action="underline"
+                  className="text-3xl font-semibold tracking-tight sm:text-4xl"
+                />
+    
+                <p className="mt-3 max-w-lg text-sm leading-6 text-muted-foreground sm:text-base">
+                  Browse our collections and discover something you&apos;ll love.
+                </p>
+              </div>
+    
+              
+            </div>
 
       <div className="grid grid-cols-2 gap-x-3 gap-y-9 sm:gap-x-5 md:grid-cols-3 md:gap-5 lg:grid-cols-4 lg:gap-y-12">
         {products.map((product) => (

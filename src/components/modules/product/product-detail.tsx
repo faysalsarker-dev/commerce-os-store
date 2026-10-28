@@ -18,13 +18,6 @@ import { cn } from "@/lib/utils";
 import type { Product } from "@/data/product.data";
 import { formatPrice } from "@/lib/formate-price";
 
-const relatedImages = [
-  "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=900&q=80",
-  "https://images.unsplash.com/photo-1503341504253-dff4815485f1?auto=format&fit=crop&w=900&q=80",
-  "https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=900&q=80",
-  "https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&w=900&q=80",
-];
-
 function ProductGallery({
   product,
   selectedColorIndex,
@@ -37,20 +30,25 @@ function ProductGallery({
   onSelectThumbnail: (index: number) => void;
 }) {
   const gallery = product.colors[selectedColorIndex]?.images ?? product.colors[0]?.images ?? [];
-  const activeImage = gallery[selectedImageIndex] ?? gallery[0] ?? relatedImages[0];
+  const activeImage = gallery[selectedImageIndex] ?? gallery[0];
 
   return (
     <div className="space-y-4">
       <div className="relative h-140 overflow-hidden rounded border border-black/5 bg-[#f0f0f0] sm:h-160">
-        <Image
-          src={activeImage}
-          alt={product.name}
-          fill
-          priority
-          sizes="(max-width: 768px) 100vw, 55vw"
-          className="object-cover"
-        />
-      
+        {activeImage ? (
+          <Image
+            src={activeImage}
+            alt={product.name}
+            fill
+            priority
+            sizes="(max-width: 768px) 100vw, 55vw"
+            className="object-cover"
+          />
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center text-sm text-muted-foreground">
+            Add product images to display them here
+          </div>
+        )}
       </div>
 
       <div

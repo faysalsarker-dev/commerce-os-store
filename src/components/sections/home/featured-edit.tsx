@@ -1,7 +1,6 @@
-"use client";
 
-import Image from "next/image";
 import { Title } from "@/components/shared/title";
+import { ProductCard } from "../../modules/home/product-card";
 
 type Product = {
   id: number;
@@ -58,45 +57,8 @@ const products: Product[] = [
 
 
 
-type ProductCardProps = {
-  product: Product;
-};
 
-const priceFormatter = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "USD",
-});
 
-function ProductCard({ product }: ProductCardProps) {
-  return (
-    <article className="group min-w-0">
-      <div className="relative aspect-4/5 overflow-hidden rounded-lg bg-muted">
-        <Image
-          src={product.image}
-          alt={product.name}
-          fill
-          loading="lazy"
-          sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw"
-          className="object-cover transition-transform duration-500 ease-out group-hover:scale-105 motion-reduce:transform-none"
-        />
-        {product.label && (
-          <span className="absolute left-3 top-3 rounded-sm bg-background/90 px-2 py-1 text-[0.65rem] font-medium uppercase tracking-wide text-foreground">
-            {product.label}
-          </span>
-        )}
-        <span className="absolute right-3 top-3 rounded-sm bg-background/90 px-2.5 py-1.5 text-sm font-semibold tabular-nums text-foreground shadow-sm">
-          {priceFormatter.format(product.price)}
-        </span>
-      </div>
-      <div className="pt-3">
-        <p className="text-xs uppercase tracking-wide text-muted-foreground">{product.category}</p>
-        <h3 className="mt-1 text-sm font-medium leading-snug text-foreground sm:text-base">
-          {product.name}
-        </h3>
-      </div>
-    </article>
-  );
-}
 
 export default function FeaturedEdit() {
   return (

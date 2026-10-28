@@ -7,6 +7,7 @@ import { categories } from "@/data/category.data";
 import { cn } from "@/lib/utils";
 import CategoryCard from "../../modules/home/category-card";
 import Link from "next/link";
+import HeadLine from "@/components/ui/head-line";
 
 interface CategoriesSectionProps {
   className?: string;
@@ -22,7 +23,18 @@ export function CategoriesSection({ className }: CategoriesSectionProps) {
       className={cn("mx-auto w-full max-w-7xl", className)}
     >
       <div className="mb-5 flex items-end justify-between gap-4">
-        <div>
+<HeadLine
+    title="Shop by category"
+            as="h2"
+            highlight="category"
+            action="underline"
+            className="text-2xl font-semibold tracking-tight md:text-3xl"
+            firstMessage="Shop the collection"
+
+/>
+
+
+        {/* <div>
           <p className="mb-2 text-[0.7rem] font-medium uppercase tracking-[0.25em] text-muted-foreground">
             Shop the collection
           </p>
@@ -34,7 +46,7 @@ export function CategoriesSection({ className }: CategoriesSectionProps) {
             action="underline"
             className="text-2xl font-semibold tracking-tight md:text-3xl"
           />
-        </div>
+        </div> */}
 
         <Link
           href="/categories"
