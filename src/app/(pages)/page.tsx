@@ -11,10 +11,10 @@ export default function Home() {
     <>
       <AnnouncementBar />
       <HeroCarousel />
-      <div className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 md:py-20 lg:px-12 space-y-16 md:space-y-24">
+      <div className="mx-auto w-full max-w-7xl px-4 6 sm:px-6  lg:px-12 space-y-14 md:space-y-24">
         <CategoriesSection />
         <FeaturedEdit />
-        {/* <PromotionalBanner /> */}
+        <PromotionalBanner />
         <NewArrivals />
         <CollectionBannerSection />
 

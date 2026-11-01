@@ -4,26 +4,29 @@ import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 const slides = [
-  {
+
+   {
     id: "1",
-    image: "https://i.pinimg.com/1200x/1a/35/85/1a3585a130701e041667789d7713d427.jpg",
+    image: "https://i.pinimg.com/1200x/57/c0/dc/57c0dc270079227d42af591a3118f1be.jpg",
     alt: "Hero 1",
   },
-  {
+    {
     id: "2",
     image: "https://i.pinimg.com/1200x/20/3b/be/203bbee4c17863b5c55bab3db609d9ba.jpg",
     alt: "Hero 2",
   },
   {
     id: "3",
-    image: "https://i.pinimg.com/1200x/c9/4b/80/c94b80778cc44b28a45fe4aea8415e52.jpg",
+    image: "https://i.pinimg.com/1200x/9e/e5/1d/9ee51d91fe338e2ba21154f02dee08cd.jpg",
     alt: "Hero 3",
   },
+
   {
     id: "4",
-    image: "https://i.pinimg.com/1200x/15/b4/e7/15b4e791cdb5dba6efff9573f2af9006.jpg",
+    image: "https://i.pinimg.com/1200x/df/a1/9a/dfa19aee94e4b97c3238f63d4aaeb1af.jpg",
     alt: "Hero 4",
   },
+ 
 ];
 
 export type HeroSlide = {

@@ -7,7 +7,7 @@ export default function FeaturedEdit() {
   const featuredProducts = products.filter((product) => product.featured);
 
   return (
-    <section id="featured" aria-label="Featured products" className="mt-16 md:mt-24">
+    <section id="featured" aria-label="Featured products" className="">
       <div className="mb-6 flex items-end justify-between gap-6 md:mb-8">
         <div className="min-w-0">
           <p className="mb-2 text-[0.7rem] font-medium tracking-[0.25em] text-muted-foreground uppercase">

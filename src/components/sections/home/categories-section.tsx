@@ -1,26 +1,22 @@
 
 import { ArrowRight } from "lucide-react";
 
-import { Title } from "@/components/shared/title";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { categories } from "@/data/category.data";
-import { cn } from "@/lib/utils";
 import CategoryCard from "../../modules/home/category-card";
 import Link from "next/link";
 import HeadLine from "@/components/ui/head-line";
 
-interface CategoriesSectionProps {
-  className?: string;
-}
 
-export function CategoriesSection({ className }: CategoriesSectionProps) {
+
+export function CategoriesSection() {
   if (categories.length === 0) return null;
 
   return (
     <section
       id="categories"
       aria-label="Shop by category"
-      className={cn("mx-auto w-full max-w-7xl", className)}
+      className="w-full pt-10"
     >
       <div className="mb-5 flex items-end justify-between gap-4">
 <HeadLine
@@ -34,19 +30,7 @@ export function CategoriesSection({ className }: CategoriesSectionProps) {
 />
 
 
-        {/* <div>
-          <p className="mb-2 text-[0.7rem] font-medium uppercase tracking-[0.25em] text-muted-foreground">
-            Shop the collection
-          </p>
-
-          <Title
-            title="Shop by category"
-            as="h2"
-            highlight="category"
-            action="underline"
-            className="text-2xl font-semibold tracking-tight md:text-3xl"
-          />
-        </div> */}
+    
 
         <Link
           href="/categories"
