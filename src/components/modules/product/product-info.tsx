@@ -23,7 +23,7 @@ export function ProductInfo({ product, onColorChange }: ProductInfoProps) {
     setColorId(id);
     setVariantId(undefined);
     setQuantity(1);
-    onColorChange(id);
+    onColorChange?.(id);
   };
   const changeSize = (id: string) => {
     setVariantId(id);

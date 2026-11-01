@@ -54,7 +54,7 @@ function Button({
   children,
   ...props
 }: ButtonProps) {
-  if (asChild && isValidElement(children)) {
+  if (asChild && isValidElement<{ className?: string }>(children)) {
     return cloneElement(children, {
       ...props,
       className: cn(buttonVariants({ variant, size, className }), children.props.className),

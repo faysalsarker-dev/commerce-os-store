@@ -1,22 +1,14 @@
 "use client";
 
-import { useMemo, useState } from "react";
 import Image from "next/image";
-import {
-  ArrowRight,
-  BadgePercent,
-  Check,
-  Heart,
-  ShieldCheck,
-  ShoppingBag,
-  Star,
-  Truck,
-} from "lucide-react";
+import { useState, ViewTransition } from "react";
+import { ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ProductCard } from "@/components/modules/home/product-card";
 import { cn } from "@/lib/utils";
 import type { Product } from "@/data/product.data";
 import { formatPrice } from "@/lib/formate-price";
+import { useCart } from "@/stores/cart-store";
+import { toast } from "sonner";
 
 function ProductGallery({
   product,
@@ -29,50 +21,64 @@ function ProductGallery({
   selectedImageIndex: number;
   onSelectThumbnail: (index: number) => void;
 }) {
-  const gallery = product.colors[selectedColorIndex]?.images ?? product.colors[0]?.images ?? [];
+  const gallery =
+    product.colors[selectedColorIndex]?.images ??
+    product.colors[0]?.images ??
+    [];
   const activeImage = gallery[selectedImageIndex] ?? gallery[0];
 
   return (
     <div className="space-y-4">
-      <div className="relative h-140 overflow-hidden rounded border border-black/5 bg-[#f0f0f0] sm:h-160">
-        {activeImage ? (
-          <Image
-            src={activeImage}
-            alt={product.name}
-            fill
-            priority
-            sizes="(max-width: 768px) 100vw, 55vw"
-            className="object-cover"
-          />
-        ) : (
-          <div className="absolute inset-0 flex items-center justify-center text-sm text-muted-foreground">
-            Add product images to display them here
-          </div>
-        )}
-      </div>
-
-      <div
-        className={cn(
-          "w-full gap-3",
-          gallery.length > 4 ? "flex snap-x overflow-x-auto pb-2" : "grid grid-cols-4"
-        )}
+      <ViewTransition
+        name={`product-image-${product.slug}`}
+        share="product-morph"
+        default="none"
       >
-        {gallery.map((image, index) => (
-          <button
-            key={`${product.slug}-${image}-${index}`}
-            type="button"
-            aria-label={`View product image ${index + 1}`}
-            onClick={() => onSelectThumbnail(index)}
-            className={cn(
-              "group relative h-24 shrink-0 overflow-hidden rounded border bg-white shadow-sm transition-all snap-start",
-              gallery.length > 4 ? "w-[calc(25%-0.75rem)] min-w-27.5" : "w-full",
-              index === selectedImageIndex ? "border-black/20 ring-1 ring-black/10" : "border-transparent"
-            )}
-          >
-            <Image src={image} alt={`${product.name} thumbnail ${index + 1}`} fill className="object-cover" />
-          </button>
-        ))}
-      </div>
+        <div className="relative aspect-4/5 overflow-hidden rounded-2xl bg-muted">
+          {activeImage ? (
+            <Image
+              src={activeImage}
+              alt={product.name}
+              fill
+              priority
+              sizes="(max-width: 768px) 100vw, 58vw"
+              className="object-cover"
+            />
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center text-sm text-muted-foreground">
+              Product image unavailable
+            </div>
+          )}
+        </div>
+      </ViewTransition>
+
+      {gallery.length > 1 && (
+        <div className="flex snap-x gap-3 overflow-x-auto pb-1">
+          {gallery.map((image, index) => (
+            <button
+              key={`${product.slug}-${image}-${index}`}
+              type="button"
+              aria-label={`View product image ${index + 1}`}
+              aria-pressed={index === selectedImageIndex}
+              onClick={() => onSelectThumbnail(index)}
+              className={cn(
+                "relative h-20 w-16 shrink-0 snap-start overflow-hidden rounded-lg border bg-muted transition-[border-color,opacity] duration-200 sm:h-24 sm:w-20",
+                index === selectedImageIndex
+                  ? "border-primary"
+                  : "border-border opacity-70 hover:opacity-100",
+              )}
+            >
+              <Image
+                src={image}
+                alt=""
+                fill
+                sizes="80px"
+                className="object-cover"
+              />
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -90,114 +96,138 @@ function ProductInfo({
   selectedSize: string;
   onSelectSize: (size: string) => void;
 }) {
-  const [saved, setSaved] = useState(false);
+  const { addItem } = useCart();
   const selectedColor = product.colors[selectedColorIndex] ?? product.colors[0];
-  const salePercent = Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100);
+  const hasComparePrice = product.originalPrice > product.price;
+  const canAddToCart = product.sizes.length === 0 || Boolean(selectedSize);
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">
-        <span>{product.badge}</span>
-      </div>
+    <div className="flex flex-col lg:sticky lg:top-24">
+      <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
+        {product.category}
+      </p>
 
-      <div>
-        <h1 className="text-4xl font-semibold tracking-[-0.06em] text-foreground">{product.name}</h1>
-      </div>
+      <ViewTransition
+        name={`product-title-${product.slug}`}
+        share="product-morph"
+        default="none"
+      >
+        <h1 className="mt-3 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+          {product.name}
+        </h1>
+      </ViewTransition>
 
-      <div className="flex items-center gap-3 text-sm text-muted-foreground">
-        <div className="flex items-center gap-1 text-[#1d1d1d]">
-          {Array.from({ length: 5 }).map((_, index) => (
-            <Star
-              key={index}
-              className={cn("size-4 fill-current", index < Math.round(product.rating) ? "text-black" : "text-muted-foreground/60")}
-            />
-          ))}
-        </div>
-        <span className="font-medium text-foreground">{product.rating.toFixed(1)}</span>
-        <span>({product.reviewCount} reviews)</span>
-      </div>
-
-      <div className="flex items-center gap-3">
-        <span className="text-4xl font-semibold tracking-[-0.04em] text-foreground">
-          {formatPrice(product.price)}
-        </span>
-        <span className="text-lg text-muted-foreground line-through">{formatPrice(product.originalPrice)}</span>
-        <span className="rounded bg-black px-2 py-1 text-xs font-semibold text-white">{salePercent}% OFF</span>
-      </div>
-
-      <p className="max-w-xl text-base leading-7 text-muted-foreground">{product.description}</p>
-
-      <div className="border-t border-black/10 pt-5">
-        <div className="mb-3 flex items-center justify-between text-sm text-muted-foreground">
-          <span>Color: {selectedColor?.name ?? "Default"}</span>
-        </div>
-
-        <div className="flex items-center gap-3">
-          {product.colors.map((color, index) => (
-            <button
-              key={color.name}
-              type="button"
-              aria-label={`Select ${color.name}`}
-              onClick={() => onSelectColor(index)}
-              className={cn(
-                "relative h-9 w-9 rounded-full border-2 transition-all duration-200",
-                selectedColorIndex === index ? "border-black shadow-sm" : "border-white"
-              )}
-              style={{ backgroundColor: color.hex }}
-            >
-              {selectedColorIndex === index && <span className="absolute inset-0 rounded-full ring-2 ring-black/10" />}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div className="border-t border-black/10 pt-5">
-        <div className="mb-3 flex items-center justify-between text-sm text-muted-foreground">
-          <span>Size: {selectedSize}</span>
-          <button type="button" className="font-medium text-foreground underline decoration-black/25 underline-offset-4 hover:decoration-black">
-            Size Guide
-          </button>
-        </div>
-        <div className="grid grid-cols-5 gap-2">
-          {product.sizes.map((size) => (
-            <button
-              key={size}
-              type="button"
-              onClick={() => onSelectSize(size)}
-              className={cn(
-                "rounded-lg border px-3 py-2.5 text-sm font-medium transition-all",
-                selectedSize === size ? "border-black bg-black text-white" : "border-black/10 bg-white text-foreground hover:border-black/25"
-              )}
-            >
-              {size}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div className="flex items-center gap-3 pt-2">
-        <Button className="flex h-15.5 flex-1 items-center justify-center gap-3 rounded-xl bg-black text-base font-semibold text-white hover:bg-black/90">
-          <ShoppingBag className="size-5" />
-          Add to Cart
-        </Button>
-        <button
-          type="button"
-          aria-label="Save to wishlist"
-          onClick={() => setSaved((value) => !value)}
-          className={cn(
-            "flex h-15.5 w-15.5 items-center justify-center rounded-xl border border-black/10 bg-white transition-colors",
-            saved && "bg-black text-white"
+      <ViewTransition
+        name={`product-price-${product.slug}`}
+        share="product-morph"
+        default="none"
+      >
+        <div className="mt-5 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+          <span className="text-2xl font-semibold tracking-tight text-foreground">
+            {formatPrice(product.price)}
+          </span>
+          {hasComparePrice && (
+            <span className="text-sm text-muted-foreground line-through">
+              {formatPrice(product.originalPrice)}
+            </span>
           )}
-        >
-          <Heart className={cn("size-5", saved ? "fill-current" : "fill-none")} />
-        </button>
-      </div>
+        </div>
+      </ViewTransition>
 
-      <div className="grid grid-cols-3 gap-3 border-t border-black/10 pt-5 text-sm text-muted-foreground">
-        <div className="flex items-center gap-2"><Truck className="size-4 text-foreground" /> <span>Free Shipping</span></div>
-        <div className="flex items-center gap-2"><BadgePercent className="size-4 text-foreground" /> <span>Easy Returns</span></div>
-        <div className="flex items-center gap-2"><ShieldCheck className="size-4 text-foreground" /> <span>Secure Payment</span></div>
-      </div>
+      {product.description.trim() && (
+        <p className="mt-5 max-w-xl text-sm leading-7 text-muted-foreground sm:text-base">
+          {product.description}
+        </p>
+      )}
+
+      {product.colors.length > 0 && (
+        <div className="mt-8 border-t border-border pt-6">
+          <div className="mb-4 flex items-baseline justify-between gap-3">
+            <h2 className="text-sm font-medium text-foreground">Color</h2>
+            <span className="text-sm text-muted-foreground">
+              {selectedColor?.name}
+            </span>
+          </div>
+          <ViewTransition
+            name={`product-colors-${product.slug}`}
+            share="product-morph"
+            default="none"
+          >
+            <div className="flex flex-wrap gap-3">
+              {product.colors.map((color, index) => (
+                <button
+                  key={color.name}
+                  type="button"
+                  aria-label={`Select ${color.name}`}
+                  aria-pressed={selectedColorIndex === index}
+                  onClick={() => onSelectColor(index)}
+                  className={cn(
+                    "grid size-10 place-items-center rounded-full border transition-[border-color,box-shadow] duration-200",
+                    selectedColorIndex === index
+                      ? "border-primary ring-2 ring-primary/20 ring-offset-2 ring-offset-background"
+                      : "border-border hover:border-foreground/50",
+                  )}
+                >
+                  <span
+                    aria-hidden="true"
+                    className="size-7 rounded-full border border-black/10"
+                    style={{ backgroundColor: color.hex }}
+                  />
+                </button>
+              ))}
+            </div>
+          </ViewTransition>
+        </div>
+      )}
+
+      {product.sizes.length > 0 && (
+        <div className="mt-7 border-t border-border pt-6">
+          <div className="mb-4 flex items-baseline justify-between gap-3">
+            <h2 className="text-sm font-medium text-foreground">Size</h2>
+            <span className="text-sm text-muted-foreground">
+              {selectedSize ? `Selected: ${selectedSize}` : "Choose a size"}
+            </span>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {product.sizes.map((size) => (
+              <button
+                key={size}
+                type="button"
+                aria-pressed={selectedSize === size}
+                onClick={() => onSelectSize(size)}
+                className={cn(
+                  "min-w-12 rounded-lg border px-4 py-2.5 text-sm font-medium transition-colors duration-200",
+                  selectedSize === size
+                    ? "border-primary btn-main"
+                    : "border-border bg-card text-card-foreground hover:border-foreground/50",
+                )}
+              >
+                {size}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <Button
+        disabled={!canAddToCart}
+        onClick={() => {
+          const added = addItem(
+            product,
+            selectedColorIndex,
+            selectedSize || "One size",
+          );
+          if (added) {
+            toast.success("Added to cart");
+          } else {
+            toast.error("Unable to add this item to your cart.");
+          }
+        }}
+        className="mt-8 h-12 w-full rounded-lg text-base btn-main font-semibold  transition-transform duration-200 hover:scale-[1.01] hover:bg-primary/90 active:scale-[0.99]"
+      >
+        <ShoppingBag className="size-5" />
+        Add to cart
+      </Button>
     </div>
   );
 }
@@ -205,57 +235,11 @@ function ProductInfo({
 export function ProductDetailClient({ product }: { product: Product }) {
   const [selectedColorIndex, setSelectedColorIndex] = useState(0);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const [selectedSize, setSelectedSize] = useState(product.sizes[2] ?? product.sizes[0] ?? "M");
-
-  const relatedCards = useMemo(
-    () => [
-      {
-        id: "1",
-        name: "Minimal Hoodie",
-        image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=900&q=80",
-        price: 54.99,
-        originalPrice: 74.99,
-        category: "Essentials",
-        slug: "minimal-hoodie",
-        label: "New",
-      },
-      {
-        id: "2",
-        name: "Classic Sweatshirt",
-        image: "https://images.unsplash.com/photo-1503341504253-dff4815485f1?auto=format&fit=crop&w=900&q=80",
-        price: 49.99,
-        originalPrice: 69.99,
-        category: "Core",
-        slug: "classic-sweatshirt",
-        label: "Trending",
-      },
-      {
-        id: "3",
-        name: "Zip Up Hoodie",
-        image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=900&q=80",
-        price: 64.99,
-        originalPrice: 94.99,
-        category: "Layering",
-        slug: "zip-up-hoodie",
-        label: "Limited Drop",
-      },
-      {
-        id: "4",
-        name: product.name,
-        image: product.colors[0]?.images[0],
-        price: product.price,
-        originalPrice: product.originalPrice,
-        category: product.category,
-        slug: product.slug,
-        label: product.badge,
-      },
-    ],
-    [product]
-  );
+  const [selectedSize, setSelectedSize] = useState(product.sizes[0] ?? "");
 
   return (
-    <div className="space-y-12">
-      <div className="grid gap-10 lg:grid-cols-[1.45fr_0.95fr] lg:items-start">
+    <div className="pb-12">
+      <div className="grid gap-8 md:gap-12 lg:grid-cols-[minmax(0,1.15fr)_minmax(360px,0.85fr)] lg:items-start lg:gap-16">
         <ProductGallery
           product={product}
           selectedColorIndex={selectedColorIndex}
@@ -273,50 +257,6 @@ export function ProductDetailClient({ product }: { product: Product }) {
           onSelectSize={setSelectedSize}
         />
       </div>
-
-      <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
-        <div className="rounded-[2rem] border border-black/5 bg-white p-6">
-          <div className="mb-5 flex gap-8 border-b border-black/10 text-sm font-medium text-muted-foreground">
-            {[
-              "Details",
-              "Materials",
-              "Size & Fit",
-              "Shipping & Returns",
-            ].map((tab, index) => (
-              <button key={tab} type="button" className={cn("pb-3", index === 0 && "border-b-2 border-black text-foreground")}>
-                {tab}
-              </button>
-            ))}
-          </div>
-
-          <div className="space-y-5 text-base leading-7 text-muted-foreground">
-            <p>
-              Crafted from high-quality heavyweight cotton, this hoodie delivers unmatched comfort and durability. The oversized fit and minimal design make it a versatile staple for any wardrobe.
-            </p>
-
-            <ul className="space-y-3">
-              {[
-                "Oversized fit",
-                "Soft & heavyweight fabric",
-                "Adjustable drawstring hood",
-                "Ribbed cuffs and hem",
-                "Unisex style",
-              ].map((item) => (
-                <li key={item} className="flex items-center gap-3">
-                  <span className="flex size-5 items-center justify-center rounded-full bg-black text-white">
-                    <Check className="size-3" />
-                  </span>
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-
-     
-      </div>
-
-    
     </div>
   );
 }

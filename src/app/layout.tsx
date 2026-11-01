@@ -3,8 +3,9 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Header } from "@/components/shared/Header";
 import { MobileAppbar } from "@/components/shared/mobile-appbar";
-import type { NavItem } from "@/types/nav-item.type";
 import { Footer } from "@/components/shared/footer";
+import { StoreProvider } from "@/components/providers/store-provider";
+import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -20,14 +21,6 @@ const geistMono = Geist_Mono({
 
 
 
-const navItems: NavItem[] = [
-  { label: "Home", href: "#top" },
-  { label: "Shop", href: "#featured" },
-  { label: "Categories", href: "#categories" },
-  { label: "New Arrivals", href: "#new-arrivals" },
-  { label: "Track Order", href: "#footer" },
-];
-
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
@@ -35,13 +28,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={cn("h-full", "antialiased", geistSans.variable, geistMono.variable, "font-sans", inter.variable)}
     >
       <body className="min-h-full flex flex-col">
-        <Header logoText="Forma" navItems={navItems} cartCount={2} />
-        <MobileAppbar logoText="Forma" navItems={navItems} cartCount={2} />
-        <main className="bg-background border-2">
-              {children}
-        </main>
-    
-        <Footer />
+        <StoreProvider>
+          <Header />
+          <MobileAppbar />
+          <Toaster position="top-right" />
+          <main className="bg-background border-2">{children}</main>
+          <Footer />
+        </StoreProvider>
       </body>
     </html>
   );

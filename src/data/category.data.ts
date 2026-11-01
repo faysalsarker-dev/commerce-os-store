@@ -46,13 +46,11 @@ export const categories: Category[] = [
     image: "https://i.pinimg.com/736x/39/23/0e/39230ec1522182b1cfa888d19eaa5509.jpg",
   },
    {
-    id: "cat-outerwear",
-    slug: "outerwear",
-    title: "Outerwear",
-    image: "https://i.pinimg.com/1200x/26/5a/7a/265a7add90f5682fc56ad7ccb656fd01.jpg",
-  },
- 
- 
+     id: "cat-outerwear",
+     slug: "outerwear",
+     title: "Outerwear",
+     image: "https://i.pinimg.com/1200x/26/5a/7a/265a7add90f5682fc56ad7ccb656fd01.jpg",
+   },
 ];
 
 export function getCategoryBySlug(slug: string): Category | undefined {

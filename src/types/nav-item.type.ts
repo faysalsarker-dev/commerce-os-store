@@ -1,10 +1,11 @@
 import type { AnchorHTMLAttributes, ImgHTMLAttributes } from "react";
+import type { LucideIcon } from "lucide-react";
 
-export type NavItem = { label: string; href: string };
+export type NavItem = { label: string; href: string; icon: LucideIcon };
 
 export type AppLinkProps = AnchorHTMLAttributes<HTMLAnchorElement>;
 export type AppImageProps = ImgHTMLAttributes<HTMLImageElement>;
-export type HeaderProps = { logoText: string; navItems: NavItem[]; cartCount: number };
+export type HeaderProps = { logoText: string; navItems: NavItem[] };
 export type MobileAppbarProps = HeaderProps;
 export type FooterProps = { logoText: string };
 

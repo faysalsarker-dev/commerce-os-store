@@ -107,7 +107,7 @@ export function HeroCarousel({ interval = 5000 }: HeroCarouselProps) {
   return (
     <section
       aria-label="Featured banners"
-      className="relative h-[60svh] min-h-95 w-full overflow-hidden md:h-[calc(100vh-100px)] md:max-h-205"
+      className="relative aspect-5/2 w-full overflow-hidden"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >

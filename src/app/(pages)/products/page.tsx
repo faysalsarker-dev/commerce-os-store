@@ -9,6 +9,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const ITEMS_PER_PAGE = 8;
 
@@ -26,6 +33,20 @@ const CATEGORIES = [
   "Bottoms",
 ] as const;
 
+const CATEGORY_ITEMS: Record<string, string> = {
+  All: "All Categories",
+  Essentials: "Essentials",
+  Outerwear: "Outerwear",
+  Denim: "Denim",
+  Knitwear: "Knitwear",
+  Footwear: "Footwear",
+  Accessories: "Accessories",
+  Layering: "Layering",
+  Core: "Core",
+  Shirts: "Shirts",
+  Bottoms: "Bottoms",
+};
+
 type SortOption = "featured" | "newest" | "price-asc" | "price-desc" | "rating-desc";
 
 const SORT_OPTIONS: { label: string; value: SortOption }[] = [
@@ -36,13 +57,23 @@ const SORT_OPTIONS: { label: string; value: SortOption }[] = [
   { label: "Highest Rated", value: "rating-desc" },
 ];
 
+const SORT_ITEMS: Record<SortOption, string> = {
+  featured: "Featured",
+  newest: "Newest Arrivals",
+  "price-asc": "Price: Low to High",
+  "price-desc": "Price: High to Low",
+  "rating-desc": "Highest Rated",
+};
+
 function ProductsCatalog() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
   // URL query params
-  const currentCategory = searchParams.get("category") || "All";
+  const rawCategory = searchParams.get("category") || "All";
+  const currentCategory =
+    CATEGORIES.find((c) => c.toLowerCase() === rawCategory.toLowerCase()) || "All";
   const currentSearch = searchParams.get("search") || "";
   const currentSort = (searchParams.get("sort") as SortOption) || "featured";
   const currentPage = Math.max(1, parseInt(searchParams.get("page") || "1", 10));
@@ -194,101 +225,113 @@ function ProductsCatalog() {
 
       {/* Main Catalog Area */}
       <div className="mx-auto max-w-[1440px] px-4 py-8 sm:px-6 lg:px-12">
-        {/* Controls: Search, Sort & Clear */}
+        {/* Controls: Search, Category & Sort */}
         <div className="flex flex-col gap-4 border-b border-border pb-6 lg:flex-row lg:items-center lg:justify-between">
           {/* Search Form */}
           <form
             ref={formRef}
             onSubmit={handleSearchSubmit}
-            className="relative flex w-full max-w-md items-center"
+            className="relative w-full max-w-md"
           >
-            <Search className="pointer-events-none absolute left-3 size-4 text-muted-foreground" />
-            <Input
-              key={currentSearch}
-              name="search"
-              defaultValue={currentSearch}
-              type="text"
-              placeholder="Search products by name, style, or tag..."
-              className="h-10 w-full pl-9 pr-20 text-sm"
-            />
-            {currentSearch ? (
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon-xs"
-                onClick={handleClearSearch}
-                className="absolute right-12 text-muted-foreground hover:text-foreground"
-                aria-label="Clear search"
-              >
-                <X className="size-3.5" />
-              </Button>
-            ) : null}
-            <Button
-              type="submit"
-              size="sm"
-              variant="secondary"
-              className="absolute right-1.5 h-7 px-2.5 text-xs font-medium"
-            >
-              Search
-            </Button>
+            <div className="relative flex items-center">
+              <Search className="pointer-events-none absolute left-3.5 size-4 text-muted-foreground" />
+              <Input
+                key={currentSearch}
+                name="search"
+                defaultValue={currentSearch}
+                type="text"
+                placeholder="Search products by name, style, or tag..."
+                className="h-10 w-full rounded-xl border-input bg-card/60 pl-10 pr-22 text-sm placeholder:text-muted-foreground focus-visible:bg-card focus-visible:ring-1 focus-visible:ring-ring transition-colors"
+              />
+              <div className="absolute right-1.5 flex items-center gap-1">
+                {currentSearch ? (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon-xs"
+                    onClick={handleClearSearch}
+                    className="size-7 rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground"
+                    aria-label="Clear search"
+                  >
+                    <X className="size-3.5" />
+                  </Button>
+                ) : null}
+                <Button
+                  type="submit"
+                  size="sm"
+                  variant="secondary"
+                  className="h-7 rounded-lg px-2.5 text-xs font-medium shadow-2xs"
+                >
+                  Search
+                </Button>
+              </div>
+            </div>
           </form>
 
-          {/* Sort Dropdown */}
+          {/* Selects & Actions */}
           <div className="flex flex-wrap items-center gap-3">
-            <div className="flex items-center gap-2">
-              <ArrowUpDown className="size-4 text-muted-foreground" />
-              <label htmlFor="sort-select" className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                Sort:
-              </label>
-              <select
-                id="sort-select"
-                value={currentSort}
-                onChange={(e) => handleSortChange(e.target.value as SortOption)}
-                className="h-9 rounded-md border border-input bg-background px-3 py-1 text-sm font-medium text-foreground outline-none transition-colors focus:border-ring focus:ring-1 focus:ring-ring"
-              >
-                {SORT_OPTIONS.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
+            {/* Category Select */}
+            <Select
+              items={CATEGORY_ITEMS}
+              value={currentCategory}
+              onValueChange={(val) => {
+                if (val) handleCategorySelect(val);
+              }}
+            >
+              <SelectTrigger className="data-[size=default]:h-10 h-10 min-w-[175px] w-full sm:w-auto rounded-xl border-input bg-card/60 px-3.5 text-sm shadow-2xs hover:bg-card transition-colors">
+                <span className="flex items-center gap-2 truncate pr-1">
+                  <SlidersHorizontal className="size-3.5 shrink-0 text-muted-foreground" />
+                  <span className="text-xs font-medium text-muted-foreground">Category:</span>
+                  <SelectValue placeholder="All Categories" />
+                </span>
+              </SelectTrigger>
+              <SelectContent className="rounded-xl border-border shadow-md min-w-[190px]">
+                {CATEGORIES.map((category) => (
+                  <SelectItem key={category} value={category} className="cursor-pointer">
+                    {category === "All" ? "All Categories" : category}
+                  </SelectItem>
                 ))}
-              </select>
-            </div>
+              </SelectContent>
+            </Select>
 
+            {/* Sort Select */}
+            <Select
+              items={SORT_ITEMS}
+              value={currentSort}
+              onValueChange={(val) => {
+                if (val) handleSortChange(val as SortOption);
+              }}
+            >
+              <SelectTrigger className="data-[size=default]:h-10 h-10 min-w-[185px] w-full sm:w-auto rounded-xl border-input bg-card/60 px-3.5 text-sm shadow-2xs hover:bg-card transition-colors">
+                <span className="flex items-center gap-2 truncate pr-1">
+                  <ArrowUpDown className="size-3.5 shrink-0 text-muted-foreground" />
+                  <span className="text-xs font-medium text-muted-foreground">Sort:</span>
+                  <SelectValue placeholder="Featured" />
+                </span>
+              </SelectTrigger>
+              <SelectContent className="rounded-xl border-border shadow-md min-w-[190px]">
+                {SORT_OPTIONS.map((option) => (
+                  <SelectItem key={option.value} value={option.value} className="cursor-pointer">
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            {/* Reset Filters */}
             {hasActiveFilters && (
               <Button
-                variant="ghost"
+                type="button"
+                variant="outline"
                 size="sm"
                 onClick={handleResetAll}
-                className="h-9 gap-1.5 text-xs text-muted-foreground hover:text-foreground"
+                className="data-[size=sm]:h-10 h-10 rounded-xl border-dashed border-border px-3 text-xs text-muted-foreground hover:border-foreground/30 hover:bg-muted hover:text-foreground gap-1.5 transition-colors"
               >
                 <RotateCcw className="size-3.5" />
                 Reset
               </Button>
             )}
           </div>
-        </div>
-
-        {/* Category Filter Pills */}
-        <div className="flex items-center gap-2 overflow-x-auto py-5 scrollbar-none">
-          <div className="flex shrink-0 items-center gap-1.5 text-xs font-medium uppercase tracking-wider text-muted-foreground mr-2">
-            <SlidersHorizontal className="size-3.5" />
-            Category:
-          </div>
-          {CATEGORIES.map((category) => {
-            const isActive = currentCategory.toLowerCase() === category.toLowerCase();
-            return (
-              <Button
-                key={category}
-                type="button"
-                size="sm"
-                variant={isActive ? "default" : "outline"}
-                onClick={() => handleCategorySelect(category)}
-                className="h-8 rounded-full text-xs font-medium transition-colors"
-              >
-                {category}
-              </Button>
-            );
-          })}
         </div>
 
         {/* Active Filter Chips / Status summary */}
@@ -354,6 +397,7 @@ function ProductsCatalog() {
                 image: p.colors[0]?.images[0] ?? "",
                 rating: p.rating,
                 reviewCount: p.reviewCount,
+                colors: p.colors,
               };
 
               return (
@@ -450,6 +494,13 @@ function ProductsCatalogFallback() {
         </div>
       </div>
       <div className="mx-auto max-w-[1440px] px-4 py-8 sm:px-6 lg:px-12">
+        <div className="mb-6 flex flex-col gap-4 border-b border-border pb-6 lg:flex-row lg:items-center lg:justify-between">
+          <div className="h-10 w-full max-w-md animate-pulse rounded-xl bg-muted" />
+          <div className="flex gap-3">
+            <div className="h-10 w-44 animate-pulse rounded-xl bg-muted" />
+            <div className="h-10 w-48 animate-pulse rounded-xl bg-muted" />
+          </div>
+        </div>
         <div className="grid grid-cols-2 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {Array.from({ length: 8 }).map((_, i) => (
             <div key={i} className="flex flex-col gap-3">

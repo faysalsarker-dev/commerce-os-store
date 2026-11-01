@@ -39,6 +39,7 @@ export default function FeaturedEdit() {
               label: product.badge,
               rating: product.rating,
               reviewCount: product.reviewCount,
+              colors: product.colors,
             }}
           />
         ))}

@@ -4,6 +4,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { ViewTransition } from "react";
 
 import { cn } from "@/lib/utils";
 import { formatPrice, getDiscount, normalizeLabel } from "@/lib/formators";
@@ -20,6 +21,7 @@ export type Product = {
   originalPrice?: number | null;
   rating?: number | null;
   reviewCount?: number | null;
+  colors?: { name: string; hex: string }[];
 };
 
 export type ProductCardProps = {
@@ -77,81 +79,137 @@ export function ProductCard({
         data-slot="product-card"
         className="flex h-full min-w-0 flex-col"
       >
-        <div className="relative aspect-4/5 w-full overflow-hidden rounded-md bg-muted">
-          {image ? (
-            <Image
-              src={image}
-              alt={name}
-              fill
-              priority={priority}
-              loading={priority ? undefined : "lazy"}
-              sizes={sizes}
-              className="object-cover transition-transform duration-500 ease-out group-hover/card:scale-[1.04] motion-reduce:transform-none motion-reduce:transition-none"
-            />
-          ) : (
-            <div
-              role="img"
-              aria-label="Product image unavailable"
-              className="absolute inset-0 flex items-center justify-center p-3 text-center text-xs text-muted-foreground"
-            >
-              Image unavailable
-            </div>
-          )}
-
-          {(discount > 0 || label) && (
-            <div className="pointer-events-none absolute inset-2 flex flex-col items-start gap-1.5">
-              {discount > 0 && (
-                <span className="inline-flex min-h-6 items-center rounded-sm bg-primary px-2 py-1 text-[10px] font-semibold uppercase leading-none tracking-wide text-primary-foreground tabular-nums sm:text-xs">
-                  -{discount}%
-                </span>
-              )}
-
-              {label && (
-                <span
-                  className={cn(
-                    "inline-flex min-h-6 max-w-full items-center truncate rounded-sm px-2 py-1 text-[10px] font-semibold uppercase leading-none tracking-wide sm:text-xs",
-                    LABEL_STYLES[label.toLowerCase()] ??
-                      "bg-background/95 text-foreground",
-                  )}
-                >
-                  {label}
-                </span>
-              )}
-            </div>
-          )}
-        </div>
-
-        <div className="flex min-w-0 flex-1 flex-col pt-3">
-          {category && (
-            <p className="truncate text-[10px] font-medium uppercase leading-4 tracking-[0.12em] text-muted-foreground sm:text-xs sm:tracking-[0.15em]">
-              {category}
-            </p>
-          )}
-
-          <h3 className="mt-1 line-clamp-2 text-sm font-medium leading-snug text-card-foreground sm:mt-1.5 sm:text-base">
-            {name}
-          </h3>
-
-          <div className="mt-2 flex min-w-0 flex-wrap items-baseline gap-x-2 gap-y-1">
-            {price ? (
-              <span className="text-sm font-semibold leading-5 text-card-foreground tabular-nums sm:text-base">
-                {price}
-              </span>
+        <ViewTransition
+          name={product.id ? `product-image-${product.id}` : undefined}
+          share="product-morph"
+          default="none"
+        >
+          <div className="relative aspect-4/5 w-full overflow-hidden rounded-md bg-muted">
+            {image ? (
+              <Image
+                src={image}
+                alt={name}
+                fill
+                priority={priority}
+                loading={priority ? undefined : "lazy"}
+                sizes={sizes}
+                className="object-cover transition-transform duration-500 ease-out group-hover/card:scale-[1.04] motion-reduce:transform-none motion-reduce:transition-none"
+              />
             ) : (
-              <span className="text-sm text-muted-foreground">
-                Price unavailable
-              </span>
+              <div
+                role="img"
+                aria-label="Product image unavailable"
+                className="absolute inset-0 flex items-center justify-center p-3 text-center text-xs text-muted-foreground"
+              >
+                Image unavailable
+              </div>
             )}
 
-            {originalPrice &&
-              typeof product.price === "number" &&
-              typeof product.originalPrice === "number" &&
-              product.originalPrice > product.price && (
-                <span className="group-hover:text-primary text-xs leading-5 text-muted-foreground line-through tabular-nums sm:text-sm">
-                  {originalPrice}
+            {(discount > 0 || label) && (
+              <div className="pointer-events-none absolute inset-2 flex flex-col items-start gap-1.5">
+                {discount > 0 && (
+                  <span className="inline-flex min-h-6 items-center rounded-sm bg-primary px-2 py-1 text-[10px] font-semibold uppercase leading-none tracking-wide text-primary-foreground tabular-nums sm:text-xs">
+                    -{discount}%
+                  </span>
+                )}
+
+                {label && (
+                  <ViewTransition
+                    name={`product-label-${product.slug}`}
+                    share="product-morph"
+                    default="none"
+                  >
+                    <span
+                      className={cn(
+                        "inline-flex min-h-6 max-w-full items-center truncate rounded-sm px-2 py-1 text-[10px] font-semibold uppercase leading-none tracking-wide sm:text-xs",
+                        LABEL_STYLES[label.toLowerCase()] ??
+                          "bg-background/95 text-foreground",
+                      )}
+                    >
+                      {label}
+                    </span>
+                  </ViewTransition>
+                )}
+              </div>
+            )}
+          </div>
+        </ViewTransition>
+
+        <div className="flex min-w-0 flex-1 flex-col pt-3">
+          {(category || product.colors?.length) && (
+            <div className="flex min-w-0 items-center justify-between gap-2">
+              {category && (
+                <p className="min-w-0 truncate text-[10px] font-medium uppercase leading-4 tracking-[0.12em] text-muted-foreground sm:text-xs sm:tracking-[0.15em]">
+                  {category}
+                </p>
+              )}
+
+              {!!product.colors?.length && (
+                <ViewTransition
+                  name={`product-colors-${product.slug}`}
+                  share="product-morph"
+                  default="none"
+                >
+                  <div
+                    aria-label={`${product.colors.length} available colors`}
+                    className="flex shrink-0 items-center gap-1"
+                  >
+                    <div className="flex -space-x-1">
+                      {product.colors.slice(0, 3).map((color, index) => (
+                        <span
+                          key={`${color.hex}-${index}`}
+                          aria-hidden="true"
+                          title={color.name}
+                          className="size-3 rounded-full border border-card"
+                          style={{ backgroundColor: color.hex }}
+                        />
+                      ))}
+                    </div>
+                    <span className="text-[10px] leading-4 text-muted-foreground sm:text-xs">
+                      {product.colors.length}
+                    </span>
+                  </div>
+                </ViewTransition>
+              )}
+            </div>
+          )}
+
+          <ViewTransition
+            name={`product-title-${product.slug}`}
+            share="product-morph"
+            default="none"
+          >
+            <h3 className="mt-1 line-clamp-2 text-sm font-medium leading-snug text-card-foreground sm:mt-1.5 sm:text-base">
+              {name}
+            </h3>
+          </ViewTransition>
+
+          <ViewTransition
+            name={`product-price-${product.slug}`}
+            share="product-morph"
+            default="none"
+          >
+            <div className="mt-2 flex min-w-0 flex-wrap items-baseline gap-x-2 gap-y-1">
+              {price ? (
+                <span className="text-sm font-semibold leading-5 text-card-foreground tabular-nums sm:text-base">
+                  {price}
+                </span>
+              ) : (
+                <span className="text-sm text-muted-foreground">
+                  Price unavailable
                 </span>
               )}
-          </div>
+
+              {originalPrice &&
+                typeof product.price === "number" &&
+                typeof product.originalPrice === "number" &&
+                product.originalPrice > product.price && (
+                  <span className="group-hover:text-primary text-xs leading-5 text-muted-foreground line-through tabular-nums sm:text-sm">
+                    {originalPrice}
+                  </span>
+                )}
+            </div>
+          </ViewTransition>
         </div>
       </article>
     </Link>

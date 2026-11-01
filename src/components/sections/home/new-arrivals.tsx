@@ -16,6 +16,7 @@ export function NewArrivals() {
       reviewCount: product.reviewCount,
       label: product.badge,
       image: product.colors[0]?.images[0] ?? "",
+      colors: product.colors,
     }));
 
   return (
@@ -27,15 +28,15 @@ export function NewArrivals() {
                 </p>
     
                 <Title
-                  title="All categories"
+                  title="New Arrivals"
                   as="h1"
-                  highlight="categories"
+                  highlight="Arrivals"
                   action="underline"
                   className="text-3xl font-semibold tracking-tight sm:text-4xl"
                 />
     
                 <p className="mt-3 max-w-lg text-sm leading-6 text-muted-foreground sm:text-base">
-                  Browse our collections and discover something you&apos;ll love.
+                  Discover the latest additions to our collection, featuring fresh styles 
                 </p>
               </div>
     

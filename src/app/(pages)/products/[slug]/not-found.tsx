@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function ProductNotFound() {
   return (
-    <main id="top" className="mx-auto flex min-h-[60svh] max-w-[1280px] flex-col items-center justify-center px-5 py-28 text-center sm:px-8 lg:px-12">
+    <main id="top" className="mx-auto flex min-h-[60svh] max-w-7xl flex-col items-center justify-center px-5 py-28 text-center sm:px-8 lg:px-12">
       <p className="text-sm text-muted-foreground">404</p>
       <h1 className="mt-2 text-3xl font-semibold tracking-tight md:text-4xl">We couldn&apos;t find that product</h1>
       <p className="mt-3 max-w-md text-sm text-muted-foreground">

@@ -1,5 +1,5 @@
 import { ChevronRight } from "lucide-react";
-import { AppLink } from "@/components/shared/app-link";
+import Link from "next/link";
 
 export type BreadcrumbItem = {
   label: string;
@@ -15,9 +15,9 @@ export function Breadcrumb({ items }: { items: BreadcrumbItem[] }) {
         return (
           <div key={`${item.label}-${index}`} className="flex items-center gap-2">
             {item.href && !isLast ? (
-              <AppLink href={item.href} className="transition-colors hover:text-foreground">
+              <Link href={item.href} className="transition-colors hover:text-foreground">
                 {item.label}
-              </AppLink>
+              </Link>
             ) : (
               <span className={isLast ? "text-foreground" : "text-muted-foreground"}>{item.label}</span>
             )}
